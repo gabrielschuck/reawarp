@@ -1032,7 +1032,7 @@ local COL_BEAT = r.ColorToNative(150, 150, 150) | 0x1000000
 
 ---------------------------------------------------------------------------
 -- Strings. English is the reference; add a table to translate.
--- Language: setting "lang" (auto / en / pt-BR). "auto" uses REAPER's language
+-- Language: setting "lang" (auto / en / pt-BR / es). "auto" uses REAPER's language
 -- pack when one is active, otherwise the system language.
 ---------------------------------------------------------------------------
 local STRINGS = {}
@@ -1060,7 +1060,7 @@ STRINGS.en = {
   set_snap = "Snap to transients (1=yes 0=no)",
   set_follow = "Item follows tempo changes (1/0)",
   set_fix_sig = "Change project time sig (0=no 1=ask 2=always)",
-  set_lang = "Language (auto en pt-BR)",
+  set_lang = "Language (auto en pt-BR es)",
 
   set_detector = "Beat detector (auto=Beat This! or builtin)",
   det_note = " Detector: %s.",
@@ -1176,7 +1176,7 @@ STRINGS["pt-BR"] = {
   set_snap = "Alinhar ao transiente (1=sim 0=não)",
   set_follow = "Item segue mudanças de tempo (1/0)",
   set_fix_sig = "Ajustar compasso do projeto (0=não 1=perguntar 2=sempre)",
-  set_lang = "Idioma (auto en pt-BR)",
+  set_lang = "Idioma (auto en pt-BR es)",
 
   set_detector = "Detector de batidas (auto=Beat This! ou builtin)",
   det_note = " Detector: %s.",
@@ -1269,6 +1269,122 @@ STRINGS["pt-BR"] = {
   retempo_static = " Atenção: o item selecionado não acompanha mudanças de tempo (base de tempo 'time'), então deixou de estar sincronizado.",
 }
 
+STRINGS.es = {
+  err_too_short = "audio demasiado corto para analizar (mínimo ~4 s)",
+  err_no_pulse = "no se encontró un pulso constante",
+  err_few_markers = "menos de 2 marcadores de pulso dentro del ítem",
+  err_few_beats = "%s: muy pocos pulsos después del tiempo fuerte",
+  err_item = "%s: error - %s",
+  err_unexpected = "Error inesperado: %s",
+  busy = "reawarp todavía está trabajando en la acción anterior.",
+  working = "reawarp: procesando, espere y no edite el ítem hasta que termine.",
+  cancelled = "reawarp: acción cancelada. Deshacer revierte lo que ya había cambiado.",
+  select_item = "Seleccione al menos un ítem de audio.",
+
+  set_title = "reawarp - Configuración",
+  set_min_bpm = "BPM mínimo",
+  set_max_bpm = "BPM máximo",
+  set_bpm_hint = "BPM aproximado (0 = automático)",
+  set_timesig = "Compás (auto 4/4 3/4 6/8...)",
+  set_flex = "Flexibilidad del tempo (0-100)",
+  set_every = "Stretch marker cada N pulsos",
+  set_smooth = "Suavizar rejilla (0=no; -1=tempo fijo; N)",
+  set_snap = "Ajustar a transitorios (1=sí 0=no)",
+  set_follow = "El ítem sigue cambios de tempo (1/0)",
+  set_fix_sig = "Ajustar compás del proyecto (0=no 1=preguntar 2=siempre)",
+  set_lang = "Idioma (auto en pt-BR es)",
+
+  set_detector = "Detector de pulsos (auto=Beat This! o builtin)",
+  det_note = " Detector: %s.",
+  det_builtin = "interno",
+  bt_failed = "Beat This! falló (%s). Para repararlo, ejecute de nuevo 'Instalar el detector Beat This!...' desde el menú de reawarp (reutiliza lo que ya se descargó)",
+  bt_missing = "Beat This! no está instalado",
+  bt_required_ask = "reawarp usa el detector de pulsos Beat This!, que no está instalado. ¿Instalarlo ahora?",
+  bt_install_first = "instale primero Beat This! (el instalador se abrió en una ventana nueva) y luego ejecute la acción de nuevo",
+  bt_required = "Beat This! no está instalado. Instálelo desde el menú de reawarp, o elija 'builtin' como detector de pulsos en la configuración (menos fiable)",
+  menu_install = "Instalar el detector Beat This!...",
+  menu_uninstall = "Desinstalar el detector Beat This!...",
+  size_cpu = "0,8 GB",
+  install_ok = "Beat This! se instaló. Funciona en: %s. Ahora reawarp lo usa al analizar.",
+  install_fail = "La instalación de Beat This! falló. Necesita conexión a internet; puede ejecutarla de nuevo para reintentar."
+    .. "\n\n" .. "Final del informe de instalación:" .. "\n" .. "%s" .. "\n\n"
+    .. "¿Copiar el informe completo al portapapeles (para enviarlo junto con una consulta)?",
+  copied = "El informe de instalación se copió al portapapeles.",
+  uninstall_ask = "¿Desinstalar Beat This!? Esto borra las carpetas env, python, uv y models en" .. "\n" .. "%s" .. "\n"
+    .. "y libera unos %s." .. "\n\n"
+    .. "reawarp sigue instalado. Para analizar de nuevo, vuelva a instalar Beat This! desde el menú de reawarp.",
+  uninstalled = "Beat This! se desinstaló; se liberaron unos %s.",
+  uninstall_left = "Algunas carpetas no se pudieron borrar (cierre cualquier programa que las esté usando e inténtelo de nuevo): %s",
+  gpu_ask = "Se encontró una tarjeta gráfica NVIDIA (%s). ¿Instalar la versión de Beat This! que la usa?" .. "\n\n"
+    .. "Sí: versión para GPU. El análisis es unas dos veces más rápido, pero descarga unos 2,5 GB y ocupa unos 3 GB de disco." .. "\n"
+    .. "No: versión para CPU, unos 300 MB." .. "\n"
+    .. "Puede cambiarlo más tarde ejecutando el instalador de nuevo.",
+  install_started = "El instalador de Beat This! se abrió en una ventana nueva. Descarga unos %s y tarda unos "
+    .. "minutos. Cuando termine, reawarp usará Beat This! automáticamente.",
+  install_manual = "Abra una terminal y ejecute este instalador:\n%s",
+
+  sig_manual = " (configurado)",
+  sig_triple = " (detectado: ternario)",
+  sig_duple = " (detectado: binario)",
+  sig_duple_project = " (detectado: binario; igual que el proyecto)",
+
+  analyze_line = "%s: %.2f BPM (rango %.1f a %.1f), compás %s%s, %d pulsos, primer tiempo fuerte en %s.",
+  analyze_help = "\nSe crearon marcadores de toma 'RW compás.pulso'. Puede moverlos o borrarlos antes de aplicar el warp. "
+    .. "Si el tiempo fuerte es incorrecto, coloque el cursor de edición sobre el pulso 1 correcto y use 'Definir tiempo fuerte en el cursor de edición' (acción 'Set downbeat at edit cursor'). "
+    .. "Si el BPM salió a la mitad o al doble, ajuste 'BPM aproximado' en la configuración y analice de nuevo. "
+    .. "Si el compás es incorrecto, defínalo en la configuración (por ejemplo 3/4 o 6/8) y analice de nuevo.",
+
+  ask_sig = "La canción está en %s, pero el proyecto está en %d/%d en este punto.\n\n"
+    .. "¿Insertar el compás %s en el proyecto, al inicio del ítem?\n\n"
+    .. "Sí: los compases del proyecto coinciden con los de la canción.\n"
+    .. "No: los pulsos quedan a tempo, pero las líneas de compás no coinciden.",
+  sig_inserted = " Compás %s insertado en el proyecto en %s",
+  ask_tempo_map = "El proyecto tiene un mapa de tempo variable donde está el ítem. ¿Eliminarlo y usar un tempo fijo de %.0f BPM?",
+  sig_restored = "; %d/%d restaurado en %s",
+  sig_mismatch = " Atención: canción en %s, proyecto en %d/%d; las líneas de compás no coinciden.",
+  warp_line = "%s: %d stretch markers. Tempo original promedio %.2f BPM, ajustado al proyecto (%.2f BPM, velocidad %.0f%%). "
+    .. "Tiempo fuerte en el compás %d (%s).%s",
+  warp_done = "Warp aplicado: %s.",
+  n_items = "%d ítems",
+
+  tempo_line = "%s: %d marcadores de tempo creados a partir de %s (compás %d), compás %s, tempo promedio %.2f BPM.\n"
+    .. "El ítem se desplazó %.3f s para alinear su tiempo fuerte. "
+    .. "Atención: otros ítems con base de tiempo en pulsos pueden haberse movido.",
+  downbeat_set = "%s: pulso %d definido como pulso 1 (%.0f ms del cursor, compás %s). Aplique de nuevo el warp o el mapa de tempo.",
+  cursor_off = "El cursor de edición no está sobre ningún ítem seleccionado.",
+  restored = "%d ítem(s) restaurado(s) a su estado original. (Los cambios en el mapa de tempo se deshacen con Ctrl+Z.)",
+  nothing_restored = "Ningún ítem seleccionado fue modificado por reawarp.",
+
+  menu_analyze = "Analizar pulsos de los ítems seleccionados",
+  menu_warp = "Warp: el ítem sigue el tempo del proyecto",
+  menu_tempo = "Mapa de tempo: el proyecto sigue al ítem",
+  menu_downbeat = "Definir tiempo fuerte en el cursor de edición",
+  menu_restore = "Restaurar ítems originales",
+  menu_settings = "Configuración...",
+  menu_retempo = "Cambiar el tempo de la canción (todo el mapa de tempo)...",
+  menu_double = "Duplicar el BPM (un pulso entre cada dos)",
+  menu_halve = "BPM a la mitad (un pulso sí y otro no)",
+
+  undo_analyze = "reawarp: analizar pulsos",
+  undo_warp = "reawarp: warp al tempo del proyecto",
+  undo_tempo = "reawarp: mapa de tempo a partir del ítem",
+  undo_downbeat = "reawarp: definir tiempo fuerte",
+  undo_restore = "reawarp: restaurar ítems",
+  undo_retempo = "reawarp: cambiar el tempo de la canción",
+  undo_double = "reawarp: duplicar el BPM",
+  undo_halve = "reawarp: BPM a la mitad",
+  regrid_done = "%s: de %.1f a %.1f BPM.",
+  regrid_applied = "%s: de %.1f a %.1f BPM, %s aplicado de nuevo.",
+  regrid_warp = "%s: la canción ahora suena al %.0f%% de su velocidad original, al tempo del proyecto (%.1f BPM). Warp aplicado de nuevo.",
+  mode_tempo = "mapa de tempo",
+  mode_warp = "warp",
+  retempo_title = "reawarp - Cambiar el tempo",
+  retempo_caption = "Nuevo BPM promedio (actual %.2f)",
+  retempo_done = "Mapa de tempo cambiado de %.2f a %.2f BPM (%+.1f%%, %d marcadores de tempo).",
+  retempo_none = "No hay marcadores de tempo para cambiar. Sin mapa de tempo, cambie el BPM del proyecto directamente.",
+  retempo_static = " Atención: el ítem seleccionado no sigue los cambios de tempo (su base de tiempo es 'time'), así que ya no está sincronizado.",
+}
+
 local L = STRINGS.en
 
 -- Translated string (txt); with extra arguments it is used as a format string.
@@ -1298,6 +1414,7 @@ local function detect_lang()
     end
   end
   if name:match("^pt") or name:match("portug") or name:match("brazil") then return "pt-BR" end
+  if name == "es" or name:match("^es[_%-%.]") or name:match("spanish") or name:match("espa") then return "es" end
   return "en"
 end
 
