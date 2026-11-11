@@ -1,14 +1,15 @@
 -- @description reawarp: audio warping (beat detection, warp, tempo map, groove match, quantize)
--- @version 1.0.1
+-- @version 1.0.2
 -- @author Gabriel Schuck
 -- @license GPL-3.0-or-later
 -- @links
 --   GitHub https://github.com/gabrielschuck/reawarp
 -- @changelog
---   Quantize: the straight grid is found between the notes on a beat, so long-short
---   figures (such as 1.667 + 0.333 beat) take the audio of the beat for the short note.
---   Quantize: running it again on the same item starts from the item as it was
---   before the quantize, instead of on top of it (try other settings freely).
+--   Move beat markers left/right by grid (by Gianluca Apollaro): the beat markers in
+--   the time selection, or else the nearest one, move by one division of the project
+--   grid, keeping the intervals between them. Move nearest beat marker to edit cursor
+--   with a time selection moves all its markers by the same amount. The warp, tempo
+--   map, fixed tempo or groove match is applied again.
 
 -- reawarp
 -- Audio warping for REAPER: detects the beats of a song (including songs with a
