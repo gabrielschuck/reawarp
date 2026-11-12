@@ -1,15 +1,13 @@
 -- @description reawarp: audio warping (beat detection, warp, tempo map, groove match, quantize)
--- @version 1.0.2
+-- @version 1.0.3
 -- @author Gabriel Schuck
 -- @license GPL-3.0-or-later
 -- @links
 --   GitHub https://github.com/gabrielschuck/reawarp
 -- @changelog
---   Move beat markers left/right by grid (by Gianluca Apollaro): the beat markers in
---   the time selection, or else the nearest one, move by one division of the project
---   grid, keeping the intervals between them. Move nearest beat marker to edit cursor
---   with a time selection moves all its markers by the same amount. The warp, tempo
---   map, fixed tempo or groove match is applied again.
+--   Bug fix: undo. An action run in the background (warp, tempo map, quantize...) now
+--   has its own undo point with all its changes. Before, its changes ended up in the
+--   next undo point (for example adding a track), so undoing that also undid the warp.
 
 -- reawarp
 -- Audio warping for REAPER: detects the beats of a song (including songs with a
