@@ -3690,7 +3690,11 @@ local function regrid(items, s, double)
     if mode == "tempo" and n == 1 then
       -- the song plays at the item's rate (after "Change song tempo"), and
       -- the tempo map keeps it: report the tempo as heard
+      -- twice (or half) the beats: the item may move (less than half a bar)
+      -- so that the bars before the song fit at its new tempo
+      s._downbeat_changed = true
       A.tempo({ it }, s)
+      s._downbeat_changed = nil
       local rate = r.GetMediaItemTakeInfo_Value(take, "D_PLAYRATE")
       done[#done + 1] = txt("regrid_applied", it.name, avg(old) * rate, avg(new) * rate, txt("mode_tempo"))
     elseif mode == "bpm" and n == 1 then
