@@ -3124,10 +3124,38 @@ function A.warp(items, s)
   return table.concat(out, "\n"), short
 end
 
+-- Scale the tempo markers in effect over [t0, t1] by f, each keeping its bar
+-- and beat (items in beats timebase follow, with a new rate). Returns the
+-- number of markers scaled, or nil if there are none there.
+local function scale_tempo_range(t0, t1, f)
+  local n = r.CountTempoTimeSigMarkers(0)
+  local first, last
+  for i = 0, n - 1 do
+    local _, tp = r.GetTempoTimeSigMarker(0, i)
+    if tp <= t0 + 1e-6 then first = i end
+    if tp <= t1 + 1e-6 then last = i end
+  end
+  first = first or 0
+  if n == 0 or not last or last < first then return nil end
+  for i = first, last do
+    local _, _, mp, bp, bpm, num, den, lin = r.GetTempoTimeSigMarker(0, i)
+    r.SetTempoTimeSigMarker(0, i, -1, mp, bp, bpm * f, num, den, lin)
+  end
+  r.UpdateTimeline()
+  return last - first + 1
+end
+
 function A.tempo(items, s)
   local it = items[1]
   local item = it.item
   local keep_pos = s._keep_tempo_pos or (effective_mode(item, it.take) == "tempo" and #rw_markers(it.take) >= 4)
+  -- a tempo map applied again (double/halve the BPM, a moved beat...) after
+  -- "Change song tempo": the item follows the map at a rate other than 1, and
+  -- the new map keeps that change (it is made at the item's own speed first)
+  local _, prev_mode = r.GetSetMediaItemTakeInfo_String(it.take, EXT_MODE, "", false)
+  local rate0 = r.GetMediaItemTakeInfo_Value(it.take, "D_PLAYRATE")
+  local keep_rate = prev_mode == "tempo" and s.follow ~= 0
+    and r.GetMediaItemInfo_Value(item, "C_BEATATTACHMODE") == 1 and math.abs(rate0 - 1) > 1e-4
   -- the item keeps its time position while we rewrite the tempo map; its
   -- timebase is set back afterwards
   local timebase = r.GetMediaItemInfo_Value(item, "C_BEATATTACHMODE")
@@ -3265,8 +3293,13 @@ function A.tempo(items, s)
     end
     r.UpdateItemInProject(f.item)
   end
+  if keep_rate then
+    local p0 = r.GetMediaItemInfo_Value(item, "D_POSITION")
+    scale_tempo_range(p0, p0 + r.GetMediaItemInfo_Value(item, "D_LENGTH"), rate0)
+    r.UpdateItemInProject(item)
+  end
 
-  local avg = 60 * (#g.t - j0) * qn / (g.t[#g.t] - g.t[j0])
+  local avg = 60 * (#g.t - j0) * qn / (g.t[#g.t] - g.t[j0]) * (keep_rate and rate0 or 1)
   local out = txt("tempo_line",
     it.name, #used + 1, tstr(R), mR + 1, sig_str(sig), avg, delta)
 
@@ -3655,8 +3688,11 @@ local function regrid(items, s, double)
     end
 
     if mode == "tempo" and n == 1 then
+      -- the song plays at the item's rate (after "Change song tempo"), and
+      -- the tempo map keeps it: report the tempo as heard
       A.tempo({ it }, s)
-      done[#done + 1] = txt("regrid_applied", it.name, avg(old), avg(new), txt("mode_tempo"))
+      local rate = r.GetMediaItemTakeInfo_Value(take, "D_PLAYRATE")
+      done[#done + 1] = txt("regrid_applied", it.name, avg(old) * rate, avg(new) * rate, txt("mode_tempo"))
     elseif mode == "bpm" and n == 1 then
       A.bpm({ it }, s)
       done[#done + 1] = txt("regrid_applied", it.name, avg(old), avg(new), txt("mode_bpm"))
