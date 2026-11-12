@@ -1,13 +1,14 @@
 -- @description reawarp: audio warping (beat detection, warp, tempo map, groove match, quantize)
--- @version 1.0.3
+-- @version 1.0.4
 -- @author Gabriel Schuck
 -- @license GPL-3.0-or-later
 -- @links
 --   GitHub https://github.com/gabrielschuck/reawarp
 -- @changelog
---   Bug fix: undo. An action run in the background (warp, tempo map, quantize...) now
---   has its own undo point with all its changes. Before, its changes ended up in the
---   next undo point (for example adding a track), so undoing that also undid the warp.
+--   Bug fix: after Change song tempo, Double/Halve the BPM (or editing beat markers)
+--   on a tempo map brought the song back to its original tempo. The change is kept.
+--   Bug fix: after Double/Halve the BPM on a tempo map, the bars before the song (for
+--   a song starting in bar 2) did not have the song's tempo.
 
 -- reawarp
 -- Audio warping for REAPER: detects the beats of a song (including songs with a
