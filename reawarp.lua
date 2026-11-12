@@ -4675,7 +4675,13 @@ function core.run(action)
     local it = pick_beat_item(items, r.GetCursorPosition(), true)
     if not it or #rw_markers(it.take) > 0 then no_undo = true end
   end
-  if not no_undo then r.Undo_BeginBlock() end
+  -- Undo: a block cannot span defer cycles (REAPER closes it at the end of the
+  -- first one, before the changes, which then end up in whatever undo point
+  -- comes next, such as adding a track). Run in the background, the action
+  -- makes all its changes in deferred cycles and records one undo point with
+  -- them at the end; run in one go, it uses a normal block.
+  local deferred = r.defer and not core.sync
+  if not no_undo and not deferred then r.Undo_BeginBlock() end
   local co = coroutine.create(function() return A[action](items, s) end)
   local finished = false
 
@@ -4713,7 +4719,13 @@ function core.run(action)
     r.DeleteExtState("reawarp", "busy", false)
     r.UpdateArrange()
     r.UpdateTimeline()
-    if not no_undo then r.Undo_EndBlock(txt("undo_" .. action), -1) end
+    if not no_undo then
+      if deferred then
+        r.Undo_OnStateChangeEx2(0, txt("undo_" .. action), -1, -1)
+      else
+        r.Undo_EndBlock(txt("undo_" .. action), -1)
+      end
+    end
   end
   if r.atexit then
     r.atexit(function()
@@ -4740,9 +4752,10 @@ function core.run(action)
     end -- nil: cancelled in a dialog
     return true
   end
-  if r.defer and not core.sync then
+  if deferred then
+    -- the first step too, so that the script run itself changes nothing
     local function loop() if not step() then r.defer(loop) end end
-    loop()
+    r.defer(loop)
   else
     repeat until step()
   end
