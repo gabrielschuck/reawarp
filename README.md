@@ -341,7 +341,7 @@ Each action is a single undo step (Ctrl+Z).
 | Change project time sig | 1 | On warp, if the signatures differ: 0 = never, 1 = ask, 2 = always |
 | Sync other items | 0 | On warp/tempo map: 0 = no, 1 = items grouped with the selected item, 2 = all overlapping unlocked audio items, 3 = all overlapping unlocked items including MIDI |
 | Beat detector | auto | `auto` (or `beat_this`) uses Beat This!; `builtin` uses the less reliable built-in detector |
-| Visual progress | auto | A tooltip near the mouse shows the stage and the time elapsed while an action runs. `auto` shows it only without OSARA (screen readers may read every update); `on` or `off` |
+| Visual progress and results | auto | A tooltip near the mouse shows the stage and the time elapsed while an action runs. `auto` shows it only without OSARA (screen readers may read every update); `on` or `off`. With OSARA and `on`, the result of each action is also shown in the tooltip for a few seconds, besides being spoken: useful to show reawarp to people who watch, in a video or a class |
 | Language | auto | `auto`, `en`, `pt-BR` or `es`. `auto` uses REAPER's language pack, or else the system language |
 
 ## Translations

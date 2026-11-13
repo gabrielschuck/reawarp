@@ -372,7 +372,7 @@ Cada acción es un único paso de deshacer (Ctrl+Z).
 | Cambiar compás del proyecto | 1 | En el warp, si los compases difieren: 0 = nunca, 1 = preguntar, 2 = siempre |
 | Sincronizar otros ítems | 0 | En el warp/mapa de tempo: 0 = no, 1 = ítems agrupados con el seleccionado, 2 = todos los ítems de audio desbloqueados superpuestos, 3 = todos los ítems desbloqueados superpuestos, MIDI incluido |
 | Detector de pulsos | auto | `auto` (o `beat_this`) usa Beat This!; `builtin` usa el detector integrado, menos fiable |
-| Progreso visual | auto | Una ayuda emergente (tooltip) junto al ratón muestra la etapa y el tiempo transcurrido mientras se ejecuta una acción. `auto` la muestra solo sin OSARA (los lectores de pantalla pueden leer cada actualización); `on` u `off` |
+| Progreso y resultados visuales | auto | Una ayuda emergente (tooltip) junto al ratón muestra la etapa y el tiempo transcurrido mientras se ejecuta una acción. `auto` la muestra solo sin OSARA (los lectores de pantalla pueden leer cada actualización); `on` u `off`. Con OSARA y `on`, el resultado de cada acción también aparece en la ayuda unos segundos, además de anunciarse: útil para mostrar reawarp a quien mira, en un video o una clase |
 | Idioma | auto | `auto`, `en`, `pt-BR` o `es`. `auto` usa el paquete de idioma de REAPER o, si no hay, el idioma del sistema |
 
 ## Traducciones

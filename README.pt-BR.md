@@ -358,7 +358,7 @@ Cada ação é um único passo de desfazer (Ctrl+Z).
 | Ajustar compasso do projeto | 1 | No warp, se a fórmula difere: 0 = nunca, 1 = perguntar, 2 = sempre |
 | Sincronizar outros itens | 0 | No warp/mapa de tempo: 0 = não, 1 = itens agrupados com o selecionado, 2 = todos os itens de áudio desbloqueados sobrepostos, 3 = todos os itens desbloqueados sobrepostos, MIDI incluído |
 | Detector de batidas | auto | `auto` (ou `beat_this`) usa o Beat This!; `builtin` usa o detector interno, menos confiável |
-| Progresso visual | auto | Uma dica (tooltip) perto do mouse mostra a etapa e o tempo decorrido enquanto uma ação roda. `auto` mostra só sem o OSARA (leitores de tela podem ler cada atualização); `on` ou `off` |
+| Progresso e resultados visuais | auto | Uma dica (tooltip) perto do mouse mostra a etapa e o tempo decorrido enquanto uma ação roda. `auto` mostra só sem o OSARA (leitores de tela podem ler cada atualização); `on` ou `off`. Com o OSARA e `on`, o resultado de cada ação também aparece na dica por alguns segundos, além de ser falado: útil para mostrar o reawarp a quem assiste, num vídeo ou numa aula |
 | Idioma | auto | `auto`, `en`, `pt-BR` ou `es`. `auto` usa o langpack do REAPER ou, sem ele, o idioma do sistema |
 
 ## Traduções
