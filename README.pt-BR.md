@@ -36,6 +36,7 @@ mensagens aparecem em português, inglês ou espanhol conforme a configuração 
 ## Vídeo e tutoriais
 
 Vídeo mostrando o reawarp na prática: [https://www.youtube.com/watch?v=QsVLKKR6v7M](https://www.youtube.com/watch?v=QsVLKKR6v7M).
+Mais vídeos sobre o reawarp e música no canal [Gabriel Schuck](https://www.youtube.com/@gabriel.teclado.oficial).
 
 Outros tutoriais estão sendo preparados. Se você usa o reawarp e quiser fazer um tutorial,
 uma demonstração ou um vídeo, sua contribuição é muito bem-vinda; veja

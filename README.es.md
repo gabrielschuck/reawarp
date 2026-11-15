@@ -39,7 +39,8 @@ inglés según el ajuste *Idioma*.
 Se están preparando tutoriales en español. Mientras tanto, hay un video (en portugués) que
 muestra reawarp en la práctica: [https://www.youtube.com/watch?v=QsVLKKR6v7M](https://www.youtube.com/watch?v=QsVLKKR6v7M). Los subtítulos automáticos de YouTube se pueden
 traducir al español: en el reproductor, abra *Configuración > Subtítulos > Traducir
-automáticamente*.
+automáticamente*. Más videos sobre reawarp y música en el canal
+[Gabriel Schuck](https://www.youtube.com/@gabriel.teclado.oficial) (en portugués).
 
 Si usa reawarp y quiere hacer un tutorial, una demostración o un video en su idioma, su
 contribución es muy bienvenida; vea [Cómo contribuir](#cómo-contribuir).
