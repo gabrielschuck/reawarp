@@ -33,6 +33,14 @@ ação em andamento mostra o progresso numa dica (tooltip) perto do mouse, e a n
 entre marcadores de batida mostra o marcador numa nota perto do mouse que some sozinha. As
 mensagens aparecem em português, inglês ou espanhol conforme a configuração *Idioma*.
 
+## Vídeo e tutoriais
+
+Vídeo mostrando o reawarp na prática: [https://www.youtube.com/watch?v=QsVLKKR6v7M](https://www.youtube.com/watch?v=QsVLKKR6v7M).
+
+Outros tutoriais estão sendo preparados. Se você usa o reawarp e quiser fazer um tutorial,
+uma demonstração ou um vídeo, sua contribuição é muito bem-vinda; veja
+[Como contribuir](#como-contribuir).
+
 ## Instalação
 
 **Pelo ReaPack** (recomendado: as atualizações chegam sozinhas):
@@ -431,6 +439,8 @@ alguma forma no seu projeto, considere contribuir:
 - **Código**: faça um fork do repositório e abra um pull request. Rode os testes offline
   (veja [Testes](#testes)) e mantenha a interface acessível: só menus e diálogos nativos do
   REAPER, mensagens pelo OSARA quando disponível.
+- **Tutoriais e vídeos**: um tutorial, uma demonstração ou um vídeo mostrando o reawarp, em
+  qualquer idioma; me avise e eu coloco o link aqui.
 - **Traduções**: acrescente uma tabela em `STRINGS` no `reawarp.lua` (veja
   [Traduções](#traduções)).
 - **Doações**: se o reawarp for útil para você, pode apoiar o desenvolvimento por Pix ou

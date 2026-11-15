@@ -32,6 +32,15 @@ a running action shows its progress in a tooltip near the mouse, and moving betw
 markers shows the marker in a note near the mouse that goes away by itself. Messages are in
 English, Portuguese or Spanish, as set in the *Language* setting.
 
+## Video and tutorials
+
+Tutorials in English are being prepared. Meanwhile, there is a video (in Portuguese) showing
+reawarp in practice: [https://www.youtube.com/watch?v=QsVLKKR6v7M](https://www.youtube.com/watch?v=QsVLKKR6v7M). YouTube's automatic subtitles can be translated to
+English: in the player, open *Settings > Subtitles/CC > Auto-translate*.
+
+If you use reawarp and would like to make a tutorial, a demo or a video in your language,
+you are very welcome; see [Contributing](#contributing).
+
 ## Installation
 
 **With ReaPack** (recommended: updates arrive by themselves):
@@ -414,6 +423,8 @@ any way, please consider contributing:
 - **Code**: fork the repository and open a pull request. Please run the offline tests
   (see [Tests](#tests)) and keep the interface accessible: REAPER's native menus and
   dialogs only, messages through OSARA when available.
+- **Tutorials and videos**: a tutorial, a demo or a video showing reawarp, in any language;
+  tell me and I'll link it here.
 - **Translations**: add a table to `STRINGS` in `reawarp.lua` (see
   [Translations](#translations)).
 - **Donations**: if reawarp is useful to you, you can support its development through

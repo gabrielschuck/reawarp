@@ -34,6 +34,16 @@ aparecen en una ventana, una acción en curso muestra su progreso en una ayuda e
 una nota junto al ratón que desaparece sola. Los mensajes aparecen en español, portugués o
 inglés según el ajuste *Idioma*.
 
+## Video y tutoriales
+
+Se están preparando tutoriales en español. Mientras tanto, hay un video (en portugués) que
+muestra reawarp en la práctica: [https://www.youtube.com/watch?v=QsVLKKR6v7M](https://www.youtube.com/watch?v=QsVLKKR6v7M). Los subtítulos automáticos de YouTube se pueden
+traducir al español: en el reproductor, abra *Configuración > Subtítulos > Traducir
+automáticamente*.
+
+Si usa reawarp y quiere hacer un tutorial, una demostración o un video en su idioma, su
+contribución es muy bienvenida; vea [Cómo contribuir](#cómo-contribuir).
+
 ## Instalación
 
 **Con ReaPack** (recomendado: las actualizaciones llegan solas):
@@ -448,6 +458,8 @@ alguna forma en su proyecto, considere contribuir:
 - **Código**: haga un fork del repositorio y abra un pull request. Ejecute las pruebas
   offline (vea [Pruebas](#pruebas)) y mantenga la interfaz accesible: solo los menús y
   diálogos nativos de REAPER, y mensajes por OSARA cuando esté disponible.
+- **Tutoriales y videos**: un tutorial, una demostración o un video que muestre reawarp, en
+  cualquier idioma; avíseme y pondré el enlace aquí.
 - **Traducciones**: agregue una tabla en `STRINGS` en `reawarp.lua` (vea
   [Traducciones](#traducciones)).
 - **Donaciones**: si reawarp le resulta útil, puede apoyar su desarrollo por PayPal o Pix
