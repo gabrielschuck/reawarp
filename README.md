@@ -36,7 +36,8 @@ English, Portuguese or Spanish, as set in the *Language* setting.
 
 Tutorials in English are being prepared. Meanwhile, there is a video (in Portuguese) showing
 reawarp in practice: [https://www.youtube.com/watch?v=QsVLKKR6v7M](https://www.youtube.com/watch?v=QsVLKKR6v7M). YouTube's automatic subtitles can be translated to
-English: in the player, open *Settings > Subtitles/CC > Auto-translate*.
+English: in the player, open *Settings > Subtitles/CC > Auto-translate*. More videos about reawarp
+and music on the channel [Gabriel Schuck](https://www.youtube.com/@gabriel.teclado.oficial) (in Portuguese).
 
 If you use reawarp and would like to make a tutorial, a demo or a video in your language,
 you are very welcome; see [Contributing](#contributing).
