@@ -1,2 +1,4 @@
 * text=auto eol=lf
-*.bat text eol=crlf
+# stored with CRLF as is: ReaPack downloads the raw file, and cmd.exe
+# cannot find the labels of a batch file with LF line endings
+*.bat -text

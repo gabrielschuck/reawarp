@@ -1,15 +1,16 @@
 -- @description reawarp: audio warping (beat detection, warp, tempo map, groove match, quantize)
--- @version 1.0.5
+-- @version 1.0.6
 -- @author Gabriel Schuck
 -- @license GPL-3.0-or-later
 -- @links
 --   GitHub https://github.com/gabrielschuck/reawarp
 -- @changelog
---   Visual progress and results: with OSARA and the setting on, the result of each
---   action is also shown in a tooltip near the mouse for a few seconds (to show
---   reawarp to people who watch, in a video or a class).
---   Also distributed through ReaTeam/ReaScripts: the actions and the Beat This!
---   backend are found next to the script or in a folder named after it.
+--   Bug fix: the Beat This! installer for Windows could not show its error message
+--   ("The system cannot find the batch label specified"): it is now downloaded with
+--   Windows line endings.
+--   Beat This! installer: when the authors' server does not give the model (it has
+--   refused downloads at times), it is downloaded from a copy on reawarp's GitHub,
+--   checked by its SHA-256.
 
 -- reawarp
 -- Audio warping for REAPER: detects the beats of a song (including songs with a
