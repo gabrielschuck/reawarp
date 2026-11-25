@@ -666,6 +666,33 @@ def main():
     if max(errs2) > 5:
         fails.append(f'quantize twice: the second run went on top of the first ({max(errs2):.0f} ms)')
 
+    # swing to straight: the audio plays its second eighth at 2/3 of the beat,
+    # the MIDI item has straight eighths: the swung eighth goes to the half beat
+    yw = np.zeros(int(14 * SR))
+    swung = []
+    for b in range(4, 24):
+        swung += [b * 0.5, b * 0.5 + 0.5 * 2 / 3]
+    for t in swung:
+        i = int(round(t * SR))
+        yw[i:i + burst.size] += burst
+    yw += rng.normal(0, 0.002, yw.size)
+    lua, mock, r, core = setup()
+    mock.P.ext['reawarpq_strength'] = '100'
+    notes = []
+    for b in range(4, 23):
+        notes += [{'s': b * 0.5, 'e': b * 0.5 + 0.2}, {'s': b * 0.5 + 0.25, 'e': b * 0.5 + 0.45}]
+    mock.add_midi(0.0, 14.0, lua.table_from([lua.table_from(n) for n in notes]))
+    srcq = lua.table_from({'sr': SR, 'samples': lua.table_from(yw.tolist())})
+    aq = mock.add_item(0.0, srcq, 0.0, 13.5, 'jazz')
+    core.run('quantize')
+    errs = []
+    for b in range(5, 22):
+        errs.append(abs(mock.map_inv(aq.take, b * 0.5 + 0.5 * 2 / 3) - (b * 0.5 + 0.25)) * 1000)
+        errs.append(abs(mock.map_inv(aq.take, b * 0.5) - b * 0.5) * 1000)
+    print(f'swing to straight: eighths up to {max(errs):.1f} ms from the straight positions')
+    if max(errs) > 5:
+        fails.append('quantize swing to straight: the swung eighths did not go to the half beat')
+
     # sync = 2 (all overlapping items) leaves MIDI items out: a quantize
     # reference must not be stretched by the warp of a new song
     lua, mock, r, core = setup()

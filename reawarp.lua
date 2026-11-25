@@ -4389,7 +4389,12 @@ end
 -- such as 1.667 + 0.333 takes the audio of the second beat for its short
 -- note). Notes outside such spans use the most common number of notes per
 -- beat. The order is kept (a position already taken leaves the note out).
-local function grid_targets(tg)
+-- Where the audio really plays each part of such a span is measured on its
+-- attacks (aq: positions in quarter notes, as = strengths): a swung audio
+-- plays its second eighth near 2/3 of the beat, so that is the audio a note
+-- on the half beat takes (swing to straight), and a straight audio gives 1/2
+-- (straight to swing).
+local function grid_targets(tg, aq, as)
   local qn, count = {}, {}
   for k, t in ipairs(tg) do
     qn[k] = r.TimeMap2_timeToQN(0, t)
@@ -4409,13 +4414,66 @@ local function grid_targets(tg)
   for k = 1, #tg do
     if math.abs(qn[k] - math.floor(qn[k] + 0.5)) < 0.06 then on[#on + 1] = k end
   end
+  -- the spans, grouped by kind (beats, notes), with the audio's own phase of
+  -- each part: a histogram of the attacks over all the spans of a kind
+  local spans, kinds = {}, {}
   for i = 1, #on - 1 do
     local a, b = on[i], on[i + 1]
     local qa, qb = math.floor(qn[a] + 0.5), math.floor(qn[b] + 0.5)
     local m = b - a
     if qb > qa and m <= 8 * (qb - qa) then
-      for j = 0, m - 1 do g[a + j] = qa + j * (qb - qa) / m end
+      local key = (qb - qa) .. ":" .. m
+      spans[#spans + 1] = { a = a, qa = qa, qb = qb, m = m, key = key }
+      kinds[key] = kinds[key] or { L = qb - qa, m = m, list = {} }
+      local list = kinds[key].list
+      list[#list + 1] = #spans
     end
+  end
+  local BINS = 96
+  for _, kind in pairs(kinds) do
+    local h = {}
+    for i = 0, BINS - 1 do h[i] = 0 end
+    local j0 = 1
+    for _, si in ipairs(kind.list) do
+      local sp = spans[si]
+      while j0 <= #aq and aq[j0] < sp.qa do j0 = j0 + 1 end
+      for j = j0, #aq do
+        if aq[j] >= sp.qb then break end
+        local u = (aq[j] - sp.qa) / kind.L
+        local bi = math.min(BINS - 1, math.floor(u * BINS))
+        h[bi] = h[bi] + as[j]
+      end
+    end
+    -- smoothed (5 bins), then for each part the strongest peak within half a
+    -- part of where it would be straight, a little favouring the straight one
+    local sm = {}
+    for i = 0, BINS - 1 do
+      local v = 0
+      for d = -2, 2 do v = v + (h[i + d] or 0) * (3 - math.abs(d)) end
+      sm[i] = v
+    end
+    local total = 0
+    for i = 0, BINS - 1 do total = total + sm[i] end
+    kind.phase = { [0] = 0 }
+    for j = 1, kind.m - 1 do
+      local c = j / kind.m
+      local half = 0.5 / kind.m
+      local best, bu = 0, c
+      for i = 0, BINS - 1 do
+        local u = (i + 0.5) / BINS
+        if u > c - half and u < c + half and u > kind.phase[j - 1] + 0.5 / BINS then
+          local v = sm[i] * (1 - 0.5 * math.abs(u - c) / half)
+          if v > best then best, bu = v, u end
+        end
+      end
+      -- a clear peak only (else straight)
+      if total <= 0 or best < 2 * total / BINS then bu = c end
+      kind.phase[j] = bu
+    end
+  end
+  for _, sp in ipairs(spans) do
+    local kind = kinds[sp.key]
+    for j = 0, sp.m - 1 do g[sp.a + j] = sp.qa + kind.phase[j] * (sp.qb - sp.qa) end
   end
   if on[1] then g[on[#on]] = math.floor(qn[on[#on]] + 0.5) end
   local out, last = {}, -math.huge
@@ -4478,7 +4536,22 @@ local function quantize_one(it, targets, note_end, s)
   local sens = math.max(0, math.min(100, s.q_sens or 50)) / 100
   local floor_s = 0.01 * sens + 0.2 * (1 - sens)
   local st = math.max(0, math.min(1, (s.q_strength or 75) / 100))
-  local straight = grid_targets(tg)
+  -- the attacks of the audio in quarter notes (where they play now), for the
+  -- phases of the parts of the beat
+  local aq, as = {}, {}
+  if #tg > 0 then
+    local t_lo, t_hi = tg[1] - 2, tg[#tg] + 2
+    for j, w in ipairs(weak) do
+      if wstr[j] >= floor_s then
+        local T = pos + rel_src_to_item(take, w - offs)
+        if T >= t_lo and T <= t_hi then
+          aq[#aq + 1] = r.TimeMap2_timeToQN(0, T)
+          as[#as + 1] = wstr[j]
+        end
+      end
+    end
+  end
+  local straight = grid_targets(tg, aq, as)
   local pins, notes, last_s, last_t = {}, 0, -math.huge, -math.huge
   local j0 = 1
   for k, t in ipairs(tg) do
