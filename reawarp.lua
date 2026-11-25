@@ -4301,8 +4301,10 @@ local function take_attacks(it)
   local item, take = it.item, it.take
   local src = r.GetMediaItemTake_Source(take)
   local fn = r.GetMediaSourceFileName(src, "") or ""
-  local slen = r.GetMediaSourceLength(src)
-  local key = string.format("5|%s|%.6f", fn, slen)
+  -- (GetMediaSourceLength can say 0, e.g. for some MP3 files: the length of
+  -- the whole source then comes from the item, see below)
+  local slen = r.GetMediaSourceLength(src) or 0
+  local key = string.format("6|%s", fn)
   local ok, v = r.GetSetMediaItemTakeInfo_String(take, EXT_ATT, "", false)
   if ok and v ~= "" then
     local head, l1, l2 = v:match("^(.-)\n(.-)\n(.*)$")
@@ -4324,8 +4326,13 @@ local function take_attacks(it)
     tb = r.GetMediaItemInfo_Value(item, "C_BEATATTACHMODE"),
   }
   neutralize(item, take, true)
+  -- the whole file: from its start, as long as the source (never 0: an item
+  -- of length 0 is changed by REAPER between the steps of the reading, and
+  -- the audio read then comes out shifted)
+  local full = r.GetMediaItemInfo_Value(item, "D_LENGTH") + saved.offs
+  if slen > full then full = slen end
   r.SetMediaItemTakeInfo_Value(take, "D_STARTOFFS", 0)
-  r.SetMediaItemInfo_Value(item, "D_LENGTH", slen)
+  r.SetMediaItemInfo_Value(item, "D_LENGTH", full)
   local acc = r.CreateTakeAudioAccessor(take)
   local t0 = r.GetAudioAccessorStartTime(acc)
   local t1 = r.GetAudioAccessorEndTime(acc)
