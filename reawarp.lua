@@ -1,16 +1,19 @@
 -- @description reawarp: audio warping (beat detection, warp, tempo map, groove match, quantize)
--- @version 1.0.6
+-- @version 1.0.7
 -- @author Gabriel Schuck
 -- @license GPL-3.0-or-later
 -- @links
 --   GitHub https://github.com/gabrielschuck/reawarp
 -- @changelog
---   Bug fix: the Beat This! installer for Windows could not show its error message
---   ("The system cannot find the batch label specified"): it is now downloaded with
---   Windows line endings.
---   Beat This! installer: when the authors' server does not give the model (it has
---   refused downloads at times), it is downloaded from a copy on reawarp's GitHub,
---   checked by its SHA-256.
+--   Bug fix: audio quantize via MIDI from swing to straight (for example a swung
+--   song quantized to straight eighths) had no effect: the audio was assumed to be
+--   straight. reawarp now measures where the audio plays each part of the beat, so
+--   the quantize works in both directions.
+--   Bug fix: the attacks read for the quantize could change from one run to the next
+--   (REAPER can report an MP3 as 1 channel, and a 1-channel read gives only the left
+--   channel; an MP3 can also report a length of 0). Both channels are now always read,
+--   with the item at its real length.
+--   A loose swing (off-beats that vary from beat to beat) is now measured too.
 
 -- reawarp
 -- Audio warping for REAPER: detects the beats of a song (including songs with a
