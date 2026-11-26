@@ -127,9 +127,12 @@ function M.new(opts)
   function r.GetAudioAccessorSamples(acc, sr, nch, t0, n, buf)
     local t = acc.take
     local s = t.src.samples
+    -- mono source: the same sample on every channel asked for (interleaved)
+    nch = math.max(1, nch or 1)
     for i = 1, n do
       local srcpos = map(t, t0 + (i - 1) / sr)
-      buf.d[i] = s[math.floor(srcpos * t.src.sr + 0.5) + 1] or 0
+      local v = s[math.floor(srcpos * t.src.sr + 0.5) + 1] or 0
+      for c = 1, nch do buf.d[(i - 1) * nch + c] = v end
     end
     return 1
   end
