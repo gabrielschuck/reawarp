@@ -306,7 +306,9 @@ de tempo aplicado a un ítem (por ejemplo la batería) se aplica de la misma man
 junta; 2 incluye todos los ítems de audio desbloqueados en la misma zona, sin los ítems MIDI (para que
 una parte MIDI o la referencia de una cuantización quede en la cuadrícula del proyecto); 3
 incluye todos los ítems desbloqueados, también los MIDI. Por defecto (0), solo
-cambian los ítems seleccionados.
+cambian los ítems seleccionados. Un ítem que está en un grupo solo lo sigue su grupo,
+también con 2 o 3: el grupo dice qué ítems van juntos (un loop en otra pista, fuera del
+grupo, queda como está).
 
 Para un loop, o una canción con tempo estable, **Fixed project tempo from item** (en el menú:
 *Tempo del proyecto: el proyecto toma el BPM del ítem*) ajusta el proyecto al BPM del ítem,
@@ -347,8 +349,15 @@ en su ataque cuando hay uno cerca; el audio de en medio (semicorcheas, por ejemp
 estira con él. Solo cuenta dónde empiezan las notas, no su duración. Las notas silenciadas
 se ignoran; un ítem MIDI en bucle solo cuenta la primera vuelta. Fuera de las notas, el ítem
 queda como estaba (con su warp, por ejemplo). Se pueden cuantizar varios ítems de audio a la
-vez, y el mismo ítem MIDI sirve para otras canciones: con *Sincronizar otros ítems* en 2, el
-warp no toca los ítems MIDI.
+vez, cada uno por su cuenta, y el mismo ítem MIDI sirve para otras canciones: con
+*Sincronizar otros ítems* en 2, el warp no toca los ítems MIDI.
+
+Con **un** ítem de audio seleccionado (y el ítem MIDI), los demás ítems lo siguen según
+*Sincronizar otros ítems*, como en el warp: cada momento de su audio suena donde fue a parar
+el mismo momento del ítem cuantizado. Es el camino para los stems de una misma grabación:
+cuantice el instrumental, que tiene ataques claros, y la voz agrupada con él lo acompaña,
+quedando junto a la banda exactamente como se cantó. El ítem MIDI nunca sigue. *Restaurar*
+en el ítem cuantizado también restaura los ítems que lo siguieron.
 
 **Ajustes de la cuantización** (en el menú, o la acción *Quantize settings*):
 
@@ -379,7 +388,7 @@ Cada acción es un único paso de deshacer (Ctrl+Z).
 | Ajuste fino | 0 | Con Beat This!, 1 pone cada pulso en su primer ataque (hasta 12 ms) en lugar de solo corregir el desplazamiento medio; pruébelo cuando algunos pulsos suenen un poco tarde en pasajes densos |
 | El ítem sigue los cambios de tempo | 1 | Base de tiempo del ítem después del warp |
 | Cambiar compás del proyecto | 1 | En el warp, si los compases difieren: 0 = nunca, 1 = preguntar, 2 = siempre |
-| Sincronizar otros ítems | 0 | En el warp/mapa de tempo: 0 = no, 1 = ítems agrupados con el seleccionado, 2 = todos los ítems de audio desbloqueados superpuestos, 3 = todos los ítems desbloqueados superpuestos, MIDI incluido |
+| Sincronizar otros ítems | 0 | En el warp/mapa de tempo/cuantización de un ítem: 0 = no, 1 = ítems agrupados con el seleccionado, 2 = todos los ítems de audio desbloqueados superpuestos, 3 = todos los ítems desbloqueados superpuestos, MIDI incluido |
 | Detector de pulsos | auto | `auto` (o `beat_this`) usa Beat This!; `builtin` usa el detector integrado, menos fiable |
 | Progreso y resultados visuales | auto | Una ayuda emergente (tooltip) junto al ratón muestra la etapa y el tiempo transcurrido mientras se ejecuta una acción. `auto` la muestra solo sin OSARA (los lectores de pantalla pueden leer cada actualización); `on` u `off`. Con OSARA y `on`, el resultado de cada acción también aparece en la ayuda unos segundos, además de anunciarse: útil para mostrar reawarp a quien mira, en un video o una clase |
 | Idioma | auto | `auto`, `en`, `pt-BR` o `es`. `auto` usa el paquete de idioma de REAPER o, si no hay, el idioma del sistema |

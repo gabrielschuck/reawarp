@@ -223,6 +223,27 @@ def main():
     if abs(b1 - b0) > 0.01 or abs(b2 - b0) > 0.01 or abs(s1 / s0 - 0.5) > 0.01 or abs(s2 - s0) > 0.01:
         fails.append('warp halve/double did not act on the song speed')
 
+    # halve with two songs selected and "sync: all overlapping": the loop that
+    # overlaps them was warped on its own and must not move
+    lua, mock, r, core = setup()
+    mock.P.ext['reawarpsync'] = '3'
+    src = lua.table_from({'sr': SR, 'samples': lua.table_from(y.tolist())})
+    loop = mock.add_item(2.0, src, 0.0, 30.0, 'loop')
+    mock.P.sel = lua.table_from([loop])
+    core.run('warp')
+    loop_sm = [(m.pos, m.src) for m in lua_list(loop.take.sm)]
+    loop_pos = loop.D_POSITION
+    voc = mock.add_item(3.1, src, 0.0, 30.0, 'vocals')
+    ins = mock.add_item(3.1, src, 0.0, 30.0, 'instrumental')
+    mock.P.sel = lua.table_from([voc, ins])
+    core.run('warp')
+    core.run('halve')
+    after = [(m.pos, m.src) for m in lua_list(loop.take.sm)]
+    print(f'halve 2 items, sync 3: loop markers {len(loop_sm)} -> {len(after)}, pos {loop_pos:.3f} -> {loop.D_POSITION:.3f}')
+    if after != loop_sm or abs(loop.D_POSITION - loop_pos) > 1e-9:
+        fails.append('halve of two items moved the overlapping loop (sync)')
+
+
     # ---------- warp over a leftover tempo map: ask, then use a fixed tempo ----------
     for answer in (6, 7):
         lua, mock, r, core = setup()
@@ -692,6 +713,38 @@ def main():
     print(f'swing to straight: eighths up to {max(errs):.1f} ms from the straight positions')
     if max(errs) > 5:
         fails.append('quantize swing to straight: the swung eighths did not go to the half beat')
+
+    # one audio item quantized with "sync: item group": the vocal grouped with
+    # the band plays each moment where the band's same moment went; a loop
+    # outside the group, and everything with sync off, stays as it is
+    for sync in (1, 3, 0):
+        lua, mock, r, core = setup()
+        mock.P.ext['reawarpq_strength'] = '100'
+        mock.P.ext['reawarpsync'] = str(sync)
+        midi = mock.add_midi(0.0, 14.0, lua.table_from([lua.table_from(n) for n in notes]))
+        srcq = lua.table_from({'sr': SR, 'samples': lua.table_from(yw.tolist())})
+        band = mock.add_item(0.0, srcq, 0.0, 13.5, 'band')
+        voc = mock.add_item(0.3, srcq, 0.3, 12.0, 'vocal')
+        loop = mock.add_item(0.0, srcq, 0.0, 13.5, 'loop')
+        band.I_GROUPID = voc.I_GROUPID = 3
+        mock.P.sel = lua.table_from([midi, band])
+        core.run('quantize')
+        msg = lua_list(mock.P.messages)[-1]
+        err = max(abs(voc.D_POSITION + mock.map_inv(voc.take, t) - band.D_POSITION - mock.map_inv(band.take, t)) * 1000 for t in swung if 1.0 < t < 12)
+        moved = max(abs(voc.D_POSITION + mock.map_inv(voc.take, t) - t) * 1000 for t in swung if 1.0 < t < 12)
+        loop_sm = len(lua_list(loop.take.sm))
+        print(f'quantize follower, sync {sync}: vocal vs band up to {err:.1f} ms, vocal moved up to {moved:.0f} ms, loop markers {loop_sm} | {msg}')
+        if sync in (1, 3) and (err > 1 or loop_sm):
+            fails.append('quantize follower: the grouped vocal did not follow the band, or the loop moved')
+        if sync == 0 and (moved > 1 or loop_sm):
+            fails.append('quantize with sync off moved other items')
+        if sync == 1:
+            core.run('quantize')
+            err2 = max(abs(voc.D_POSITION + mock.map_inv(voc.take, t) - band.D_POSITION - mock.map_inv(band.take, t)) * 1000 for t in swung if 1.0 < t < 12)
+            moved2 = max(abs(voc.D_POSITION + mock.map_inv(voc.take, t) - t) * 1000 for t in swung if 1.0 < t < 12)
+            print(f'  quantized again: vocal vs band up to {err2:.1f} ms, moved up to {moved2:.0f} ms')
+            if err2 > 1 or abs(moved2 - moved) > 1:
+                fails.append('quantize follower twice: the second run went on top of the first')
 
     # sync = 2 (all overlapping items) leaves MIDI items out: a quantize
     # reference must not be stretched by the warp of a new song

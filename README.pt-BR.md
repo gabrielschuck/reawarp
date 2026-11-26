@@ -293,7 +293,9 @@ agrupados com ele (selecione-os e aperte Ctrl+G, *Group items*), e a banda toda 
 junta; 2 inclui todos os itens de áudio desbloqueados no mesmo trecho, sem os itens MIDI (para que uma
 parte MIDI ou a referência de um quantize fique no grid do projeto); 3 inclui todos os itens
 desbloqueados, MIDI também. No padrão (0), só os itens
-selecionados mudam.
+selecionados mudam. Um item que está num grupo é seguido só pelo seu grupo, também com 2 ou
+3: o grupo diz quais itens andam juntos (um loop em outra track, fora do grupo, fica como
+está).
 
 Para um loop, ou uma música de tempo estável, **Fixed project tempo from item** (no menu: *Tempo
 do projeto: projeto assume o BPM do item*) ajusta o projeto para o BPM do item, como um tempo
@@ -332,8 +334,15 @@ tercina) recebe o áudio da metade do tempo, e uma nota na cabeça recebe o áud
 no meio (semicolcheias, por exemplo) é esticado junto. Só conta onde as notas começam, não a
 duração delas. Notas mudas são ignoradas; um item MIDI em loop conta só a primeira volta.
 Fora das notas, o item fica como estava (com o seu warp, por exemplo). Vários itens de áudio
-podem ser quantizados de uma vez, e o mesmo item MIDI pode ser usado em outras músicas: com
-*Sincronizar outros itens* em 2, o warp não mexe nos itens MIDI.
+podem ser quantizados de uma vez, cada um por conta própria, e o mesmo item MIDI pode ser
+usado em outras músicas: com *Sincronizar outros itens* em 2, o warp não mexe nos itens MIDI.
+
+Com **um** item de áudio selecionado (e o item MIDI), os outros itens o seguem conforme
+*Sincronizar outros itens*, como no warp: cada momento do áudio deles toca onde o mesmo
+momento do item quantizado foi parar. É o caminho para stems de uma mesma gravação:
+quantize o instrumental, que tem ataques claros, e a voz agrupada com ele acompanha,
+continuando junto da banda exatamente como foi cantada. O item MIDI nunca segue. *Restaurar*
+no item quantizado também restaura os itens que o seguiram.
 
 **Configurações do quantize** (no menu, ou a ação *Quantize settings*):
 
@@ -364,7 +373,7 @@ Cada ação é um único passo de desfazer (Ctrl+Z).
 | Ajuste fino | 0 | Com o Beat This!, 1 coloca cada batida no seu primeiro ataque (até 12 ms) em vez de só corrigir o deslocamento médio; experimente quando algumas batidas soarem um pouco atrasadas em trechos cheios |
 | Item segue mudanças de tempo | 1 | Base de tempo do item após o warp |
 | Ajustar compasso do projeto | 1 | No warp, se a fórmula difere: 0 = nunca, 1 = perguntar, 2 = sempre |
-| Sincronizar outros itens | 0 | No warp/mapa de tempo: 0 = não, 1 = itens agrupados com o selecionado, 2 = todos os itens de áudio desbloqueados sobrepostos, 3 = todos os itens desbloqueados sobrepostos, MIDI incluído |
+| Sincronizar outros itens | 0 | No warp/mapa de tempo/quantize de um item: 0 = não, 1 = itens agrupados com o selecionado, 2 = todos os itens de áudio desbloqueados sobrepostos, 3 = todos os itens desbloqueados sobrepostos, MIDI incluído |
 | Detector de batidas | auto | `auto` (ou `beat_this`) usa o Beat This!; `builtin` usa o detector interno, menos confiável |
 | Progresso e resultados visuais | auto | Uma dica (tooltip) perto do mouse mostra a etapa e o tempo decorrido enquanto uma ação roda. `auto` mostra só sem o OSARA (leitores de tela podem ler cada atualização); `on` ou `off`. Com o OSARA e `on`, o resultado de cada ação também aparece na dica por alguns segundos, além de ser falado: útil para mostrar o reawarp a quem assiste, num vídeo ou numa aula |
 | Idioma | auto | `auto`, `en`, `pt-BR` ou `es`. `auto` usa o langpack do REAPER ou, sem ele, o idioma do sistema |

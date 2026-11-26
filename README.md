@@ -281,6 +281,8 @@ map applied to one item (for example the drums) is applied in the same way to th
 grouped with it (select them and press Ctrl+G, *Group items*), so the whole band stays together; 2 includes every
 unlocked audio item that overlaps it, leaving MIDI items out (so a MIDI part or a quantize
 reference stays on the project grid); 3 includes every unlocked item, MIDI too. By default (0) only the selected items are changed.
+An item that is in a group is followed by its group only, also with 2 or 3: grouping says
+which items go together (a loop on another track, outside the group, stays as it is).
 
 For a loop, or a song with a steady tempo, **Fixed project tempo from item** sets the project to
 the item's BPM as one fixed tempo, without a tempo map: the item keeps its own speed and is
@@ -316,8 +318,16 @@ of the beat. The audio there is pinned on the note with a stretch marker, on its
 when there is one near; the audio in between (sixteenths, for example) is stretched along.
 Only where the notes start matters, not how long they are. Muted notes are ignored; a looped
 MIDI item counts only its first pass. Outside the notes, the item stays as it was (its
-warp, for example). Several audio items can be quantized at once, and the same MIDI item
-can be used for other songs: with *Sync other items* at 2, a warp leaves MIDI items alone.
+warp, for example). Several audio items can be quantized at once, each one on its own, and
+the same MIDI item can be used for other songs: with *Sync other items* at 2, a warp leaves
+MIDI items alone.
+
+With **one** audio item selected (and the MIDI item), the other items follow it as
+*Sync other items* says, the same as a warp: each moment of their audio plays where the same
+moment of the quantized item went. This is the way for stems of one recording: quantize the
+instrumental, whose attacks are clear, and the vocal grouped with it follows, staying with
+the band exactly as it was sung. The MIDI item never follows. *Restore* on the quantized
+item also restores the items that followed it.
 
 **Quantize settings** (in the menu, or the action *Quantize settings*):
 
@@ -348,7 +358,7 @@ Each action is a single undo step (Ctrl+Z).
 | Fine snap | 0 | With Beat This!, 1 puts each beat on its own first attack (within 12 ms) instead of only correcting the average offset; try it when some beats sound a little late in dense passages |
 | Item follows tempo changes | 1 | Item timebase after the warp |
 | Change project time sig | 1 | On warp, if the signatures differ: 0 = never, 1 = ask, 2 = always |
-| Sync other items | 0 | On warp/tempo map: 0 = no, 1 = items grouped with the selected item, 2 = all overlapping unlocked audio items, 3 = all overlapping unlocked items including MIDI |
+| Sync other items | 0 | On warp/tempo map/quantize of one item: 0 = no, 1 = items grouped with the selected item, 2 = all overlapping unlocked audio items, 3 = all overlapping unlocked items including MIDI |
 | Beat detector | auto | `auto` (or `beat_this`) uses Beat This!; `builtin` uses the less reliable built-in detector |
 | Visual progress and results | auto | A tooltip near the mouse shows the stage and the time elapsed while an action runs. `auto` shows it only without OSARA (screen readers may read every update); `on` or `off`. With OSARA and `on`, the result of each action is also shown in the tooltip for a few seconds, besides being spoken: useful to show reawarp to people who watch, in a video or a class |
 | Language | auto | `auto`, `en`, `pt-BR` or `es`. `auto` uses REAPER's language pack, or else the system language |
